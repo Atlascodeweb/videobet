@@ -38,7 +38,6 @@ export const glass: React.CSSProperties = {
   borderRadius: 20,
   boxShadow:
     '0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 0 40px rgba(76,201,255,0.04)',
-  backdropFilter: 'blur(16px)',
 };
 
 export const Scene: React.FC<{
@@ -73,12 +72,12 @@ export const Bg: React.FC<{
     <AbsoluteFill style={{overflow: 'hidden', background: C.bg}}>
       <AbsoluteFill style={{transform}}>
         <Img
-          src={staticFile(`img/${src}`)}
+          src={staticFile(blur ? `img/blur/${src.replace('.png', '.jpg')}` : `img/${src}`)}
           style={{
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            filter: `${blur ? `blur(${blur}px) ` : ''}saturate(1.08) contrast(1.06)`,
+            filter: 'saturate(1.08) contrast(1.06)',
           }}
         />
       </AbsoluteFill>
@@ -202,7 +201,7 @@ export const Reveal: React.FC<{
       style={{
         opacity: p * o,
         transform: `translate(${(1 - p) * x}px, ${(1 - p) * y - po * 20}px) scale(${scale + (1 - scale) * p})`,
-        filter: `blur(${(1 - p) * blur + po * 8}px)`,
+        filter: p >= 1 && po <= 0 ? undefined : `blur(${(1 - p) * blur + po * 8}px)`,
         ...style,
       }}
     >
@@ -230,7 +229,7 @@ export const Letters: React.FC<{
               display: 'inline-block',
               opacity: p,
               transform: `translateY(${(1 - p) * 0.4}em) scale(${0.9 + 0.1 * p})`,
-              filter: `blur(${(1 - p) * 9}px)`,
+              filter: p >= 1 ? undefined : `blur(${(1 - p) * 9}px)`,
             }}
           >
             {ch === ' ' ? '\u00a0' : ch}

@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "studio": "remotion studio",
-    "render:test": "remotion render TestMinute out/test-minute.mp4"
+    "render:test": "remotion render TestMinute out/test-minute.mp4",
+    "render:full": "node scripts/render-full.mjs",
+    "progress": "node scripts/progress-server.mjs"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.537",

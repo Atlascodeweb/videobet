@@ -880,7 +880,7 @@ export const ModestOdds: React.FC<SceneProps> = ({start, dur}) => {
     {a: at(71.32), o: 1.25, m: 'Звезда — Рубикон'},
   ];
   return (
-    <Scene dur={dur} fadeOut={16}>
+    <Scene dur={dur}>
       <Bg src="couch-bet.png" dur={dur} from={1.1} to={1.18} blur={8} dim={0.7} />
       <Particles />
       <AbsoluteFill style={center}>
