@@ -745,7 +745,7 @@ const INTRO_SFX: [number, string, number][] = [
   [71.32, 'tick', 0.5],
 ];
 
-const SFX: [number, string, number][] = [
+export const SFX: [number, string, number][] = [
   ...INTRO_SFX,
   ...CUES.slice(2).flatMap((c) => [[c.t, 'whoosh', 0.3] as [number, string, number], ...(c.sfx ?? [])]),
 ];

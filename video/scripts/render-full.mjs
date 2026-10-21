@@ -102,7 +102,7 @@ fin.state = 'rendering';
 status.message = 'Сводим звук и склеиваем части';
 save();
 const audio = path.join(out, 'audio.wav');
-await run(['remotion', 'render', 'Full', audio, '--codec=wav']);
+execFileSync('node', [path.join(root, 'scripts/mix-audio.mjs'), audio], {stdio: 'inherit'});
 const list = path.join(chunksDir, 'list.txt');
 fs.writeFileSync(list, parts.slice(0, -1).map((p) => `file '${p.file}'`).join('\n'));
 execFileSync('ffmpeg', [
