@@ -101,15 +101,6 @@ export const TestMinute: React.FC = () => {
       <Sequence from={discFrom + discLen} durationInFrames={TEST_FRAMES - discFrom - discLen}>
         <Audio src={voice} trimBefore={Math.round(DISC_AT * FPS)} trimAfter={Math.round(TEST_END * FPS)} />
       </Sequence>
-
-      <Audio
-        src={staticFile('sfx/pad.wav')}
-        volume={(f) =>
-          0.32 *
-          interpolate(f, [0, 30, discFrom - 15, discFrom, discFrom + discLen, discFrom + discLen + 20, TEST_FRAMES - 40, TEST_FRAMES], [0, 1, 1, 0.25, 0.25, 1, 1, 0], clamp)
-        }
-        trimAfter={TEST_FRAMES}
-      />
       {SFX.map(([t, name, vol], i) => (
         <Sequence key={i} from={vf(t)} durationInFrames={60}>
           <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} />

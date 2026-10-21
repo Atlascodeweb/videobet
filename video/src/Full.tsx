@@ -790,17 +790,6 @@ export const Full: React.FC = () => {
       <Sequence from={discFrom + discLen} durationInFrames={outroFrom - discFrom - discLen}>
         <Audio src={voice} trimBefore={Math.round(DISC_AT * FPS)} />
       </Sequence>
-
-      <Sequence from={0} durationInFrames={outroFrom + 20}>
-        <Audio
-          src={staticFile('sfx/pad.wav')}
-          loop
-          volume={(f) =>
-            0.3 *
-            interpolate(f, [0, 30, discFrom - 15, discFrom, discFrom + discLen, discFrom + discLen + 20, outroFrom - 40, outroFrom + 20], [0, 1, 1, 0.25, 0.25, 1, 1, 0], clamp)
-          }
-        />
-      </Sequence>
       {SFX.map(([t, name, vol], i) => (
         <Sequence key={i} from={Math.max(0, vf(t))} durationInFrames={60}>
           <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} />
