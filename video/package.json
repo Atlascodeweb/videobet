@@ -1,0 +1,20 @@
+{
+  "name": "betting-lab-express",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render:test": "remotion render TestMinute out/test-minute.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.537",
+    "@remotion/google-fonts": "^4.0.537",
+    "@remotion/transitions": "^4.0.537",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.537"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
