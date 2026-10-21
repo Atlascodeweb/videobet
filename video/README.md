@@ -4,7 +4,9 @@ Remotion project for the motion-graphics video.
 
 Media (voiceover, disclaimer/outro clips, scene images) is not committed: put it into
 `public/media/{voice.mp3,disclaimer.mp4,outro.mp4}` and `public/img/*.png`, then run
-`./scripts/make-sfx.sh` to synthesize the sound design.
+`node scripts/make-sfx.mjs` to synthesize the sound design.
+
+Подробная инструкция на русском: [GUIDE.md](GUIDE.md).
 
 ```
 npm install

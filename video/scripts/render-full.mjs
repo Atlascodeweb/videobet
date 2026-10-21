@@ -3,8 +3,9 @@
 import {spawn, execFileSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'out');
 const chunksDir = path.join(out, 'chunks');
 fs.mkdirSync(chunksDir, {recursive: true});
@@ -47,7 +48,8 @@ save();
 
 const run = (args, onLine) =>
   new Promise((resolve, reject) => {
-    const p = spawn('npx', args, {cwd: root});
+    // npx is npx.cmd on Windows and needs a shell there.
+    const p = spawn('npx', args, {cwd: root, shell: process.platform === 'win32'});
     let buf = '';
     const feed = (d) => {
       buf += d.toString();
@@ -102,9 +104,9 @@ fin.state = 'rendering';
 status.message = 'Сводим звук и склеиваем части';
 save();
 const audio = path.join(out, 'audio.wav');
-execFileSync('node', [path.join(root, 'scripts/mix-audio.mjs'), audio], {stdio: 'inherit'});
+execFileSync(process.execPath, [path.join(root, 'scripts/mix-audio.mjs'), audio], {stdio: 'inherit'});
 const list = path.join(chunksDir, 'list.txt');
-fs.writeFileSync(list, parts.slice(0, -1).map((p) => `file '${p.file}'`).join('\n'));
+fs.writeFileSync(list, parts.slice(0, -1).map((p) => `file '${p.file.replace(/\\/g, '/')}'`).join('\n'));
 execFileSync('ffmpeg', [
   '-v', 'error', '-y',
   '-f', 'concat', '-safe', '0', '-i', list,

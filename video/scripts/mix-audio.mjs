@@ -1,20 +1,28 @@
 // Builds the full soundtrack with ffmpeg (much faster than Remotion's audio-only render).
 // Mirrors the <Audio>/<OffthreadVideo> layout in src/Full.tsx.
 import {execFileSync} from 'node:child_process';
+import {buildSync} from 'esbuild';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outFile = process.argv[2] || path.join(root, 'out', 'audio.wav');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mix-'));
 fs.writeFileSync(path.join(tmp, 'font.mjs'), "export const loadFont=()=>({fontFamily:''});");
-fs.writeFileSync(path.join(tmp, 'entry.ts'), `import {SFX, VOICE_END} from ${JSON.stringify(path.join(root, 'src/Full'))};\nconsole.log(JSON.stringify({SFX, VOICE_END}));`);
-execFileSync(path.join(root, 'node_modules/.bin/esbuild'), [
-  path.join(tmp, 'entry.ts'), '--bundle', '--platform=node', '--format=esm', '--jsx=automatic', '--log-level=error',
-  `--alias:@remotion/google-fonts/Montserrat=${path.join(tmp, 'font.mjs')}`, `--outfile=${path.join(tmp, 'out.mjs')}`,
-]);
-const {SFX, VOICE_END} = JSON.parse(execFileSync('node', [path.join(tmp, 'out.mjs')]).toString());
+fs.writeFileSync(path.join(tmp, 'entry.ts'), `import {SFX, VOICE_END} from ${JSON.stringify(path.join(root, 'src/Full').replace(/\\/g, '/'))};\nconsole.log(JSON.stringify({SFX, VOICE_END}));`);
+buildSync({
+  entryPoints: [path.join(tmp, 'entry.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  jsx: 'automatic',
+  logLevel: 'error',
+  alias: {'@remotion/google-fonts/Montserrat': path.join(tmp, 'font.mjs')},
+  outfile: path.join(tmp, 'out.mjs'),
+});
+const {SFX, VOICE_END} = JSON.parse(execFileSync(process.execPath, [path.join(tmp, 'out.mjs')]).toString());
 
 const FPS = 30, DISC_AT = 48.4, DISC_LEN = 10;
 const vf = (t) => Math.round((t < DISC_AT ? t : t + DISC_LEN) * FPS);

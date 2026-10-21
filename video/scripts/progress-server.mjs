@@ -2,8 +2,9 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'out');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'out');
 const port = Number(process.env.PORT || 3333);
 
 const html = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>BETTING LAB — рендер</title>
