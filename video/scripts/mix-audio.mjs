@@ -35,8 +35,24 @@ const ms = (fr) => Math.round((fr / FPS) * 1000);
 
 const pub = (p) => path.join(root, 'public', p);
 const inputs = [pub('media/voice.mp3'), pub('media/disclaimer.mp4'), pub('media/outro.mp4')];
-const names = [...new Set(SFX.map(([, n]) => n))];
-names.forEach((n) => inputs.push(pub(`sfx/${n}.wav`)));
+// Each cue name may have variants: name.wav, name_2.wav, ... They are used round-robin
+// per name, so the same file never plays twice in a row.
+const sfxDir = pub('sfx');
+const variants = (n) =>
+  fs
+    .readdirSync(sfxDir)
+    .filter((f) => f === `${n}.wav` || new RegExp(`^${n}_\\d+\\.wav$`).test(f))
+    .sort((a, b) => (a === `${n}.wav` ? -1 : b === `${n}.wav` ? 1 : a.localeCompare(b, 'en', {numeric: true})));
+const counters = {};
+const cues = SFX.map(([t, n, vol]) => {
+  const files = variants(n);
+  if (!files.length) throw new Error(`no sfx file for "${n}"`);
+  const k = counters[n] ?? 0;
+  counters[n] = k + 1;
+  return {t, file: files[k % files.length], vol};
+});
+const files = [...new Set(cues.map((c) => c.file))];
+files.forEach((f) => inputs.push(path.join(sfxDir, f)));
 
 const f = [];
 const mix = [];
@@ -47,15 +63,18 @@ f.push(`[1:a]${fmt},adelay=${ms(discFrom)}:all=1[d]`);
 f.push(`[2:a]${fmt},adelay=${ms(outroFrom)}:all=1[o]`);
 mix.push('[v1]', '[v2]', '[d]', '[o]');
 
-names.forEach((n, k) => {
-  const uses = SFX.filter(([, m]) => m === n);
-  f.push(`[${3 + k}:a]${fmt},asplit=${uses.length}${uses.map((_, j) => `[${n}${j}]`).join('')}`);
-  uses.forEach(([t, , vol], j) => {
-    f.push(`[${n}${j}]volume=${vol},adelay=${ms(Math.max(0, vf(t)))}:all=1[${n}x${j}]`);
-    mix.push(`[${n}x${j}]`);
+files.forEach((file, k) => {
+  const uses = cues.filter((c) => c.file === file);
+  const id = `s${k}_`;
+  f.push(`[${3 + k}:a]${fmt},asplit=${uses.length}${uses.map((_, j) => `[${id}${j}]`).join('')}`);
+  uses.forEach(({t, vol}, j) => {
+    f.push(`[${id}${j}]volume=${vol},adelay=${ms(Math.max(0, vf(t)))}:all=1[${id}x${j}]`);
+    mix.push(`[${id}x${j}]`);
   });
 });
 f.push(`${mix.join('')}amix=inputs=${mix.length}:normalize=0:dropout_transition=0,highpass=f=40,atrim=0:${total.toFixed(3)}[out]`);
 fs.writeFileSync(path.join(tmp, 'graph.txt'), f.join(';\n'));
 execFileSync('ffmpeg', ['-v', 'error', '-y', ...inputs.flatMap((i) => ['-i', i]), '-filter_complex_script', path.join(tmp, 'graph.txt'), '-map', '[out]', '-ar', '48000', outFile], {stdio: 'inherit'});
+const usage = Object.fromEntries(files.map((f) => [f, cues.filter((c) => c.file === f).length]));
 console.log(`audio: ${outFile} (${total.toFixed(2)}s, ${SFX.length} sfx)`);
+console.log(JSON.stringify(usage));

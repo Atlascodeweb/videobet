@@ -101,11 +101,12 @@ const CUES: Cue[] = [
       vAccent: 'gold',
     },
     sfx: [
-      [107.4, 'tick', 0.45],
-      [109.0, 'tick', 0.45],
-      [110.2, 'tick', 0.45],
-      [112.6, 'tick', 0.45],
+      [107.4, 'success', 0.5],
+      [109.0, 'success', 0.5],
+      [110.2, 'success', 0.5],
+      [112.6, 'success', 0.5],
       [114.7, 'riser', 0.25],
+      [115.4, 'shimmer', 0.45],
     ],
   },
   st(118.8, {
@@ -136,20 +137,26 @@ const CUES: Cue[] = [
       verdict: 'Экспресс проиграл полностью',
       vAt: 126.6,
     },
-    sfx: [[126.0, 'impact', 0.7]],
+    sfx: [
+      [126.0, 'impact', 0.7],
+      [126.0, 'fail', 0.55],
+    ],
   },
   {t: 131.8, C: K.Quote, p: {img: 'floor-despair.png', text: 'Ну это же надо! Всё зашло, кроме одного!', at: 132.6, accent: 'red', kicker: 'Первая мысль'}},
-  st(137.0, {
-    img: 'runner-fall.png',
-    kicker: 'Правило экспресса',
-    lines: [
-      {t: '[4 из 5] верных —', at: 140.3, size: 96, accent: 'green'},
-      {t: 'это не «почти выигрыш»', at: 144.0, size: 80},
-      {t: 'Это проигрыш', at: 146.0, size: 120, color: 'red'},
-    ],
-    flashAt: 146.0,
-    flashRed: true,
-  }),
+  {
+    ...st(137.0, {
+      img: 'runner-fall.png',
+      kicker: 'Правило экспресса',
+      lines: [
+        {t: '[4 из 5] верных —', at: 140.3, size: 96, accent: 'green'},
+        {t: 'это не «почти выигрыш»', at: 144.0, size: 80},
+        {t: 'Это проигрыш', at: 146.0, size: 120, color: 'red'},
+      ],
+      flashAt: 146.0,
+      flashRed: true,
+    }),
+    sfx: [[146.0, 'fail', 0.4]],
+  },
 
   // ---------------- 02 · Маленькие коэффициенты ----------------
   ch(148.8, '02', 'iceberg.png', 'Маленькие коэффициенты', 'обманывают', 150.6),
@@ -209,7 +216,7 @@ const CUES: Cue[] = [
     C: K.Money,
     p: {img: 'coins-city.png', blur: true, odd: 1.2, stake: 1000, sAt: 255.9, winAt: 258.6, loseAt: 261.1},
     sfx: [
-      [258.6, 'tick', 0.5],
+      [258.6, 'pop', 0.6],
       [261.1, 'impact', 0.5],
     ],
   },
@@ -279,6 +286,7 @@ const CUES: Cue[] = [
     sfx: [
       [312.4, 'tick', 0.4],
       [318.8, 'impact', 0.35],
+      [319.0, 'shimmer', 0.45],
       [326.9, 'impact', 0.45],
     ],
   },
@@ -328,6 +336,7 @@ const CUES: Cue[] = [
       [385.8, 'tick', 0.45],
       [389.9, 'impact', 0.4],
       [399.5, 'impact', 0.55],
+      [399.5, 'fail', 0.45],
     ],
   },
   st(401.7, {
@@ -401,7 +410,10 @@ const CUES: Cue[] = [
       vAt: 470.2,
       vAccent: 'gold',
     },
-    sfx: [[466.0, 'riser', 0.25]],
+    sfx: [
+      [466.0, 'riser', 0.25],
+      [466.8, 'shimmer', 0.45],
+    ],
   },
   st(472.6, {
     img: 'tired-laptop.png',
@@ -458,7 +470,7 @@ const CUES: Cue[] = [
     },
     sfx: [
       [530.9, 'impact', 0.4],
-      [531.4, 'impact', 0.4],
+      [531.4, 'fail', 0.45],
     ],
   },
 
@@ -470,6 +482,7 @@ const CUES: Cue[] = [
     p: {img: 'winner-confetti.png', blur: true, postAt: 541.0, pileAt: 553.2, caption: 'Полная история [почти никогда] не видна', cAt: 556.2},
     sfx: [
       [541.0, 'whoosh', 0.3],
+      [541.3, 'shimmer', 0.5],
       [553.2, 'riser', 0.3],
     ],
   },
@@ -497,6 +510,7 @@ const CUES: Cue[] = [
       footer: 'Именно этой информации [обычно не хватает]',
       fAt: 595.9,
     },
+    sfx: [[582.6, 'shimmer', 0.45]],
   },
 
   // ---------------- 07 · Что выгодно букмекеру ----------------
@@ -525,7 +539,7 @@ const CUES: Cue[] = [
       fAt: 632.8,
     },
     sfx: [
-      [629.0, 'tick', 0.45],
+      [629.0, 'pop', 0.6],
       [631.4, 'impact', 0.4],
     ],
   },
@@ -665,11 +679,12 @@ const CUES: Cue[] = [
       vAt: 823.2,
     },
     sfx: [
-      [806.7, 'tick', 0.45],
-      [808.0, 'tick', 0.45],
-      [809.3, 'tick', 0.45],
-      [811.2, 'tick', 0.45],
+      [806.7, 'success', 0.5],
+      [808.0, 'success', 0.5],
+      [809.3, 'success', 0.5],
+      [811.2, 'success', 0.5],
       [815.0, 'impact', 0.6],
+      [815.0, 'fail', 0.5],
     ],
   },
   st(827.0, {
@@ -709,7 +724,7 @@ const CUES: Cue[] = [
       {t: 'Как вы справлялись с ощущением «почти выиграл»?', at: 889.7, sub: true},
     ],
   }),
-  {t: 896.2, C: K.CTA, p: {img: 'lab-microscope.png', blur: true, subAt: 907.9, tgAt: 909.7, byeAt: 911.6}, noOv: true, sfx: [[907.9, 'tick', 0.5], [909.7, 'tick', 0.5]]},
+  {t: 896.2, C: K.CTA, p: {img: 'lab-microscope.png', blur: true, subAt: 907.9, tgAt: 909.7, byeAt: 911.6}, noOv: true, sfx: [[907.9, 'pop', 0.6], [909.7, 'pop', 0.6]]},
 ];
 
 export const VOICE_END = 914.3;
@@ -721,16 +736,20 @@ const INTRO_SFX: [number, string, number][] = [
   [0.1, 'riser', 0.35],
   [1.6, 'impact', 0.5],
   [4.6, 'impact', 0.35],
+  [4.7, 'shimmer', 0.5],
   [8.1, 'tick', 0.5],
   [8.7, 'tick', 0.5],
   [9.32, 'tick', 0.5],
   [12.66, 'riser', 0.25],
-  [16.0, 'tick', 0.45],
-  [16.4, 'tick', 0.45],
-  [16.8, 'tick', 0.45],
-  [17.2, 'tick', 0.45],
+  [13.98, 'shimmer', 0.5],
+  [16.0, 'success', 0.5],
+  [16.4, 'success', 0.5],
+  [16.8, 'success', 0.5],
+  [17.2, 'success', 0.5],
   [18.5, 'impact', 0.7],
+  [18.5, 'fail', 0.55],
   [24.2, 'impact', 0.35],
+  [30.2, 'shimmer', 0.45],
   [34.2, 'tick', 0.4],
   [35.56, 'tick', 0.4],
   [37.46, 'tick', 0.4],
@@ -740,9 +759,9 @@ const INTRO_SFX: [number, string, number][] = [
   [55.8, 'tick', 0.4],
   [58.24, 'tick', 0.4],
   [61.2, 'tick', 0.4],
-  [67.76, 'tick', 0.5],
-  [69.5, 'tick', 0.5],
-  [71.32, 'tick', 0.5],
+  [67.76, 'pop', 0.6],
+  [69.5, 'pop', 0.6],
+  [71.32, 'pop', 0.6],
 ];
 
 export const SFX: [number, string, number][] = [

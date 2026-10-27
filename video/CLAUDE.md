@@ -24,14 +24,18 @@ Talk to the user in Russian. Full human guide: `GUIDE.md`.
 
 ## Sound design (do NOT invent or regenerate sounds)
 You cannot hear audio; you do not need to. The sounds are fixed files plus a timing table:
-- Use ONLY the committed files `public/sfx/{tick,impact,riser,whoosh}.wav` (synthesized by `scripts/make-sfx.mjs`). Never replace them with new synthesis, downloads or music.
-- Place sounds only through the `sfx` arrays in `src/Full.tsx` (`[voiceSeconds, name, volume]`); the soundtrack is built by `scripts/mix-audio.mjs`. Do not use `<Audio>` for SFX in new code.
-- Rules used in the reference video (164 cues in 15 min):
-  - `tick` 0.40–0.50 — each list item / ✓ / coupon row / odds card appearing, on its trigger word.
-  - `impact` 0.35–0.70 — key number reveal, loss ✕, «проигрыш», chapter title (0.55, at chapter start + 0.1 s). 0.7 only for the biggest loss moments.
-  - `riser` 0.25–0.35 — 1.2 s before a chapter card and before a big reveal (result %, payout).
-  - `whoosh` 0.30 — every scene change (added automatically). Note: this file is near-silent (−62 dBFS, bandpass Q bug); that is how the reference sounds. Do not "fix" it unless the user asks.
-  - Never two impacts within 1 s; no SFX under a quiet, emotional line; density ≈ 1 cue per 5–6 s.
+- Use ONLY the sounds in `public/sfx` (synthesized by `scripts/make-sfx.mjs`: pure sines, soft 3 ms attack, short echo, peak-normalized per family). Never replace them with downloads, music or different synthesis. New variants: add to `make-sfx.mjs` with the same recipe and name them `name_N.wav`; existing files are never overwritten.
+- Place sounds only through the `sfx` arrays / `INTRO_SFX` in `src/Full.tsx` (`[voiceSeconds, name, volume]`), by NAME. `scripts/mix-audio.mjs` picks variants round-robin (`name.wav`, `name_2.wav`, …), so the same file never repeats back to back.
+- Meaning of each name (volume):
+  - `tick` 0.40–0.50 — list item / coupon row appearing, on its trigger word (5 pitches).
+  - `success` 0.50 — ✓ / match won (two notes up).
+  - `pop` 0.60 — card or button popping in.
+  - `shimmer` 0.45–0.50 — gold number, payout, big win (quiet sparkle).
+  - `fail` 0.40–0.55 — ✕ / «проигрыш»; layer with `impact` at the same time for big losses.
+  - `impact` 0.35–0.70 — key number reveal, chapter title (0.55, at chapter start + 0.1 s). 0.7 only for the biggest loss moments.
+  - `riser` 0.25–0.35 — 1.2 s before a chapter card and before a big reveal.
+  - `whoosh` 0.30 — every scene change (added automatically). Near-silent (−62 dBFS); that is how the reference sounds. Do not "fix" it unless the user asks.
+  - Never two impacts within 1 s; no SFX under a quiet, emotional line; density ≈ 1 cue per 5 s.
 - No background music/ambience unless the user supplies a track (then −28 dB under the voice).
 - Verify sound with measurements, not by listening:
   - `ffmpeg -i out/BETTING_LAB_express_full.mp4 -af ebur128 -f null -` → Integrated ≈ −14 LUFS.
